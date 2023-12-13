@@ -1,0 +1,83 @@
+{% extends 'EcoTrends/base.html' %}
+
+{% block title %}
+    {{ product.name }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 400px; height: 400px; object-fit: cover;">
+    {% endif %}
+<!--Template for the respective product. It contains information regarding the product-->
+    <p>Price: {{ product.price }}$</p>
+
+    <h2>Ratings</h2>
+    <div class="container" style="padding: 2em">
+      <div class="card" style="width: 30rem;">
+        <div class="card-body">
+          <h5 class="card-title">Avg rating:
+            <span class="fa fa-star {% if product.average_rating > 0 %} checked {% endif %}"></span>
+            <span class="fa fa-star {% if product.average_rating > 1 %} checked {% endif %}"></span>
+            <span class="fa fa-star {% if product.average_rating > 2 %} checked {% endif %}"></span>
+            <span class="fa fa-star {% if product.average_rating > 3 %} checked {% endif %}"></span>
+            <span class="fa fa-star {% if product.average_rating > 4 %} checked {% endif %}"></span>
+          </h5>
+          <ul class="btn btn-light list-inline rating-list">
+            <li onclick="rate(5, {{ product.id }})">
+              <i class="fa fa-star {% if product.user_rating > 4 %} checked {% endif %}" title="Rate 5"></i>
+            </li>
+            <li onclick="rate(4, {{ product.id }})">
+              <i class="fa fa-star {% if product.user_rating > 3 %} checked {% endif %}" title="Rate 4"></i>
+            </li>
+            <li onclick="rate(3, {{ product.id }})">
+              <i class="fa fa-star {% if product.user_rating > 2 %} checked {% endif %}" title="Rate 3"></i>
+            </li>
+            <li onclick="rate(2, {{ product.id }})">
+              <i class="fa fa-star {% if product.user_rating > 1 %} checked {% endif %}" title="Rate 2"></i>
+            </li>
+            <li onclick="rate(1, {{ product.id }})">
+              <i class="fa fa-star {% if product.user_rating > 0 %} checked {% endif %}" title="Rate 1"></i>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <h2>Comments</h2>
+    <ul>
+      {% for comment in comments %}
+          <li>
+              {{ comment.text }} - {{ comment.user.username }} ({{ comment.created_at }})
+  
+              {% if user.is_authenticated and comment.user == user or user.is_superuser or user.is_staff%}
+                  <form method="post" action="{% url 'catalog:delete_comment' comment.id %}">
+                      {% csrf_token %}
+                      <button type="submit">Delete</button>
+                  </form>
+              {% endif %}
+          </li>
+      {% endfor %}
+  </ul>
+
+    <form method="post" action="{% url 'catalog:product_detail' pk=product.pk %}">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <button type="submit">Submit Comment</button>
+    </form>
+
+    <script>
+      //function to save the rating of the product
+      const rate = (rating, post_id) => {
+          fetch(`/rate/${post_id}/${rating}/`, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          }).then(rest => {
+              window.location.reload();
+          })
+      }
+  </script>
+{% endblock %}

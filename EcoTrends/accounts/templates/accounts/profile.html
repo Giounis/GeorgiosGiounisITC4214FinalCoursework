@@ -1,0 +1,76 @@
+<!-- catalog/templates/accounts/profile.html -->
+{% extends 'EcoTrends/base.html' %}
+
+{% block title %}
+    Your Profile
+{% endblock %}
+
+{% block content %} 
+
+    <h2>Welcome, {{ user.username }}!</h2>
+
+    <h3>Your Saved Products</h3>
+    {% if user_saved_products %}
+        <ul>
+            {% for saved_product in user_saved_products %}
+                <li>
+                    <strong>{{ saved_product.product.name }}</strong>
+                    <p>{{ saved_product.product.description }}</p>
+                    <p>Price: {{ saved_product.product.price }}$</p>
+                    <a href="{% url 'catalog:product_detail' saved_product.product.id %}">View Product Details</a>
+                    <button type="submit" onclick="unsaveProduct({{ saved_product.product.id }})">Unsave Product</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No saved products yet.</p>
+    {% endif %}
+    
+    <h3>Your Comments</h3>
+    {% for comment in comments %}
+        <p>
+            <a href="{% url 'catalog:product_detail' comment.product.id %}">{{ comment.product.name }}</a> - {{ comment.text }} - {{ comment.timestamp }}
+            <form method="post" action="{% url 'catalog:delete_commentProfile' comment.id %}">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+        </p>
+    {% endfor %}
+
+    <h3>Change Username</h3>
+    <form method="post" action="{% url 'profile' %}">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <button type="submit">Save User Details</button>
+    </form>
+
+    <form method="post" action="{% url 'profile' %}">
+        {% csrf_token %}
+        {{ password_form.as_p }}
+        <button type="submit">Change Password</button>
+    </form>
+    
+    <a href="{% url 'delete_account' %}">Delete Account</a>
+
+    <script>
+        function unsaveProduct(productId) {
+            $.ajax({
+                url: '{% url "catalog:unsave_product" 0 %}'.replace('0', productId),
+                type: 'POST',
+                data: {'product_id': productId, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data) {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function() {
+                    alert('Error unsaving product.');
+                }
+            });
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,117 @@
+.category-list {
+    cursor: pointer;
+    list-style: none;
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 20px; 
+    position: relative;
+}
+.active {
+    background-color: #fff; /* Change this to your desired background color */
+}
+
+.subcategory-list {
+    white-space: nowrap;
+    display: none;    
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); 
+    top: 100%;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right:10px;
+    padding-bottom: 10px;
+    background-color: aquamarine;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.subcategory-list li {
+    display: block; /* Change to block to prevent horizontal alignment */
+    list-style: none;
+    margin-bottom: 15px; 
+}
+
+.product-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+body {
+    background-color:  #adadad;
+    font-family: 'Roboto', sans-serif;
+    
+}
+
+.category-list:hover .subcategory-list {
+    display: block;
+}
+
+.category-list,
+.category-list a,
+.subcategory-list a {
+    text-decoration: none;
+    color: #333;
+}
+
+.category-list a:hover,
+.subcategory-list a:hover {
+    text-decoration: underline;
+}
+nav {
+    background-color: #f8f9fa;
+    padding: 10px;
+}
+
+nav a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #007bff;
+}
+.rating-list li {
+    float: right;
+    color: #ddd;
+    padding: 10px 5px;
+  }
+
+  .rating-list li:hover,
+  .rating-list li:hover ~ li {
+    color: orange;
+  }
+
+  .rating-list {
+    display: inline-block;
+    list-style: none;
+  }
+  .checked {
+      color: orange;
+  }
+  .footer {
+    margin-top: 20px; 
+    padding: 10px;
+    background-color: #333;
+    color: #fff; 
+    text-align: center; 
+    border-top: 2px solid #ddd; 
+}
+.Navbar {
+    padding: 20px;     
+    background-color: #333;
+    color: #fff; 
+    text-align: center; 
+    border-top: 2px solid #ddd; 
+}
+#sticky-header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+#sticky-header.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}

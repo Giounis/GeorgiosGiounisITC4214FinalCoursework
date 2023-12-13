@@ -1,0 +1,21 @@
+.category-list {
+    cursor: pointer;
+    list-style: none;
+}
+.subcategory-list {
+    display: none;
+    margin-left: 20px;
+}
+.subcategory-list li {
+    list-style: none;
+}
+.product-image {
+    width: 200px; /* Adjust the width as needed */
+    height: 200px; /* Maintain aspect ratio */
+    object-fit: cover;
+    border: 1px solid #ccc; /* Optional: Add a border for better visual separation */
+}
+body{
+    padding-right: 200px;
+    background-color: yellow;
+}

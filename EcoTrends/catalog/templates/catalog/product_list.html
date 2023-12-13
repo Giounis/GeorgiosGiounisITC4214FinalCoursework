@@ -1,0 +1,54 @@
+<!-- catalog/templates/catalog/product_list.html -->
+{% extends 'EcoTrends/base.html' %}
+
+{% block title %}Product List{% endblock %}
+
+{% block content %}
+<!--Essentially the home template. Lists all the products along with their fields-->
+    <ul>
+        {% for product in products %}
+            <li>
+                <strong>{{ product.name }}</strong>
+                <p>{{ product.description }}</p>
+                <a href="{% url 'catalog:product_detail' product.id %}"><!--Will redirect to the respective product's product_detail page-->
+                    {% if product.image %}
+                        <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 200px; height: 200px; object-fit: cover;">
+                    {% endif %}
+                </a>
+                <p>Price: {{ product.price }}$</p>
+                {% if user.is_staff or user.is_superuser %}
+                <form method="post" action="{% url 'catalog:delete_product' product.id %}">
+                  {% csrf_token %}  
+                  <button type="submit">Delete</button>
+                </form>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <button type="button" onclick="saveProduct({{ product.id }})">Save Product</button>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <script>
+        function saveProduct(productId) {
+            //function to "like" a product
+            var csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            $.ajax({
+                url: '{% url "catalog:save_product" 0 %}'.replace('0', productId),
+                type: 'POST',
+                data: {'product_id': productId, 'csrfmiddlewaretoken': csrf_token},
+                success: function(data) {
+                    if (data.success) {
+                        alert(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function() {
+                    alert('Error saving product.');
+                }
+            });
+        }
+    </script>
+    
+{% endblock %}
+

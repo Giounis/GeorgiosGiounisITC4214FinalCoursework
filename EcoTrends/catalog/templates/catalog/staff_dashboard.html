@@ -1,0 +1,40 @@
+{% extends 'EcoTrends/base.html' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+    <h2>Add Product</h2>
+    <form id="productForm" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ formset.management_form }}
+      {% for form in formset %}
+          {{ form.as_table }}
+      {% endfor %}
+      <button type="submit">Submit</button>
+  </form>
+  <script> 
+    $(document).ready(function() {
+        $('#productForm').submit(function(event) {
+            event.preventDefault();
+//this is a jquery function that will store the data in the form as a new product
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "catalog:staff_dashboard" %}',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log(response);
+                    location.reload();  
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+<!--I found that sometimes having the script in your HTML file makes it work. I hope that it is the correct programming practice but in this case I could not make it work otherwise-->
+{% endblock %}

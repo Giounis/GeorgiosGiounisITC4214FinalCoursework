@@ -1,0 +1,24 @@
+{% extends 'EcoTrends/base.html' %}
+
+{% block title %}Product Search{% endblock %}
+{% block content %}
+<!--This template returns all of the products that match with the search query-->
+{% for product in products %}
+<li>
+    <strong>{{ product.name }}</strong>
+    <p>{{ product.description }}</p>
+    <a href="{% url 'catalog:product_detail' product.id %}">
+        {% if product.image %}
+            <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 200px; height: 200px; object-fit: cover;">
+        {% endif %}
+    </a>
+    <p>Price: {{ product.price }}$</p>
+    {% if user.is_staff or user.is_superuser %}
+    <form method="post" action="{% url 'catalog:delete_product' product.id %}">
+      {% csrf_token %}
+      <button type="submit">Delete</button>
+    </form>
+  {% endif %}
+</li>
+{% endfor %}
+{%endblock%}
